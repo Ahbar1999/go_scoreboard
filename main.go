@@ -175,7 +175,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// register handlers
-	mux.Handle("/players/", http.HandlerFunc(getPlayers))
+	mux.Handle("api/players/", http.HandlerFunc(getPlayers))
 	
 	log.Fatal(http.ListenAndServe(":" + "8080", mux))
 }
