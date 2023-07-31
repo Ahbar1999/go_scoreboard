@@ -15,7 +15,11 @@ base url: localhost:8080/api/
 							: submit a new player: [POST: localhost:8080/api/players/] 
 							:    with form data like {'name': ..., 'score': ..., 'country': ...}
 
+- Data is stored in the memory as a slice of pointers to the struct objects 
+- At the start 10 dummy objects are automatically added
+
 # IMPORTANT 
 this is an example project, various basic features have been omitted like strict pattern matching, error handling etc.
 For example were you to send a POST request to any url starting with /api/players/, the api will accept the request
 
+Initially the 
