@@ -1,9 +1,9 @@
 # Running using docker image 
 
-```docker pull ahbar99/scoreboard```  
+```docker pull ahbar99/go_scoreboard```  
 
 replace 'port' with the port number you wish to run the server on   
-```docker run --publish <port>:8080 ahbar99/scoreboard```
+```docker run --publish <port>:8080 ahbar99/go_scoreboard```
 
 # API Details
 base url: localhost:8080/api/  
