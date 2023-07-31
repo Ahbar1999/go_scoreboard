@@ -18,7 +18,7 @@ type Player struct {
 	Score int		`json:"score"`
 }
 
-var players = make([]Player, 0)
+var players = make([]*Player, 0)
 
 func newPlayer(name string, country string, score int) (*Player, error) {
 	if len(name) == 0 || len(name) > 15 {
@@ -27,21 +27,28 @@ func newPlayer(name string, country string, score int) (*Player, error) {
 		return nil, errors.New("country code invalid")
 	}
 	
-	players = append(players, Player{len(players), name, country, score})
-	return &players[len(players) - 1], nil 
+	players = append(players, &Player{len(players), name, country, score})
+	return players[len(players) - 1], nil 
 }
-
 
 func getPlayers(w http.ResponseWriter, r *http.Request) {
 	urlString := r.URL.String()
-
-	switch true {
+	fmt.Println(urlString)
+	switch r.Method {
+	case "GET":
+		switch true {
 		case strings.HasPrefix(urlString, "/players/rank/"):
 			i := strings.Index(urlString, ":")
+			
 			rank, err := strconv.Atoi(urlString[i + 1:])
-			if err != nil || rank < 0 || rank > len(players) {
+			if err != nil || rank < 0 || rank >= len(players) {
 				// bad request
-				w.WriteHeader(http.StatusBadRequest)	
+				w.WriteHeader(http.StatusBadRequest)
+				if err != nil {
+					w.Write([]byte(err.Error()))
+				} else {
+					w.Write([]byte("invalid rank"))
+				}	
 				return
 			}
 
@@ -64,7 +71,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 			}
 			w.Write(resp)
 
-		case urlString == "/players":
+		case strings.HasPrefix(urlString, "/players"):
 			w.WriteHeader(http.StatusOK)
 			resp, err := json.Marshal(players)
 			if err != nil {
@@ -76,7 +83,20 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 		
 		default:
 			w.WriteHeader(http.StatusNotFound)
-	}
+		}
+	/*	
+	case "DELETE":
+		i := strings.Index(urlString, ":")
+			
+		id, err := strconv.Atoi(urlString[i + 1:])
+		for i, p := range players {
+			if p.Id == id {
+				// set player to nil		
+			}
+		
+		}
+	*/
+	}	
 }
 
 func main() {
@@ -88,12 +108,14 @@ func main() {
 	mux := http.NewServeMux()
 
 	// register handlers
+	/*
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(r.URL.String()))
-	})	
+	})
+	*/
 
-	mux.Handle("/players/", http.HandlerFunc(getPlayers))
+	mux.Handle("/", http.HandlerFunc(getPlayers))
 	
 	log.Fatal(http.ListenAndServe(":" + "8080", mux))
 }
