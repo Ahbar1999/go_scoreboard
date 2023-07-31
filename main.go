@@ -43,7 +43,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		switch true {
-		case strings.HasPrefix(urlString, "/players/rank/"):
+		case strings.HasPrefix(urlString, "/api/players/rank/"):
 			i := strings.Index(urlString, ":")
 			
 			rank, err := strconv.Atoi(urlString[i + 1:])
@@ -67,7 +67,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 			}
 			w.Write(resp)
 
-		case strings.HasPrefix(urlString, "/players/random"):
+		case strings.HasPrefix(urlString, "/api/players/random"):
 			w.WriteHeader(http.StatusOK)
 			resp, err := json.Marshal(players[rand.Intn(len(players))])
 			if err != nil {
@@ -77,7 +77,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 			}
 			w.Write(resp)
 
-		case strings.HasPrefix(urlString, "/players"):
+		case strings.HasPrefix(urlString, "/api/players"):
 			w.WriteHeader(http.StatusOK)
 			resp, err := json.Marshal(players)
 			if err != nil {
@@ -175,7 +175,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// register handlers
-	mux.Handle("api/players/", http.HandlerFunc(getPlayers))
+	mux.Handle("/api/players/", http.HandlerFunc(getPlayers))
 	
 	log.Fatal(http.ListenAndServe(":" + "8080", mux))
 }
