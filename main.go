@@ -43,7 +43,8 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		switch true {
-		case strings.HasPrefix(urlString, "/api/players/rank/"):
+		// get the player based on rank
+		case strings.HasPrefix(urlString, "/api/players/rank"):
 			i := strings.Index(urlString, ":")
 			
 			rank, err := strconv.Atoi(urlString[i + 1:])
@@ -66,7 +67,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			w.Write(resp)
-
+		// get a random player
 		case strings.HasPrefix(urlString, "/api/players/random"):
 			w.WriteHeader(http.StatusOK)
 			resp, err := json.Marshal(players[rand.Intn(len(players))])
@@ -76,7 +77,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			w.Write(resp)
-
+		// get the list of players
 		case strings.HasPrefix(urlString, "/api/players"):
 			w.WriteHeader(http.StatusOK)
 			resp, err := json.Marshal(players)
@@ -86,7 +87,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			w.Write(resp)
-		
+		// 404	
 		default:
 			w.WriteHeader(http.StatusNotFound)
 		}
