@@ -51,7 +51,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 				// bad request
 				w.WriteHeader(http.StatusBadRequest)
 				if err != nil {
-					w.Write([]byte(err.Error()))
+					w.Write([]byte(err.Error() + " \n Did you provide ':id'?"))
 				} else {
 					w.Write([]byte("invalid rank"))
 				}	
@@ -93,6 +93,11 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 	
 	case "DELETE":
 		i := strings.Index(urlString, ":")
+		if i == -1 {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Send a request with ':id'"))
+			return
+		}
 		deleted := false	
 		id, _ := strconv.Atoi(urlString[i + 1:])
 		for i, p := range players {
