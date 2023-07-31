@@ -99,7 +99,12 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		deleted := false	
-		id, _ := strconv.Atoi(urlString[i + 1:])
+		id, err := strconv.Atoi(urlString[i + 1:])
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}	
 		for i, p := range players {
 			if p.Id == id {
 				// shrink slice
@@ -113,7 +118,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		if !deleted {
-			w.WriteHeader(http.StatusConflict)
+			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("Player with id: : %v NOT FOUND", id))) 
 			return	
 		} else {
@@ -142,7 +147,12 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		modified := false	
-		id, _ := strconv.Atoi(urlString[i + 1:])
+		id, err := strconv.Atoi(urlString[i + 1:])
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}	
 		for i, p := range players {
 			if p.Id == id {
 				
@@ -161,7 +171,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		if !modified {
-			w.WriteHeader(http.StatusConflict)
+			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("Player with id: : %v NOT FOUND", id))) 
 			return	
 		} else {
