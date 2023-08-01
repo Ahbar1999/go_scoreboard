@@ -9,8 +9,8 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-go_scoreboard
+RUN CGO_ENABLED=0 GOOS=linux go build -o /ahbar99/go_scoreboard
 
 EXPOSE 8080
 
-CMD ["/docker-go_scoreboard"]
+CMD ["/ahbar99/go_scoreboard"]

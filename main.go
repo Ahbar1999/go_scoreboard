@@ -135,7 +135,12 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(err.Error()))
 		}
 
-		newPlayer(r.Form.Get("name"), r.Form.Get("country"), score)
+		_, err = newPlayer(r.Form.Get("name"), r.Form.Get("country"), score)
+		if err != nil {
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(err.Error()))
+			return	
+		}	
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Successfully added a new player"))
 	
@@ -184,8 +189,8 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	for i := 0; i < 10; i += 1{
-		newPlayer("aa", "IN", i * 100)
-		fmt.Println(players)	
+		p, _ := newPlayer("aa", "IN", i * 100)
+		fmt.Println(*p)	
 	}
 
 	mux := http.NewServeMux()
