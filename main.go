@@ -40,6 +40,7 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 	sort.Slice(players, func(i, j int) bool {
 		return players[i].Score > players[j].Score
 	})	
+	w.Header().Add("Content-Type", "application/json")
 	switch r.Method {
 	case "GET":
 		switch true {
